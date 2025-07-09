@@ -1,11 +1,5 @@
 import streamlit as st
 import pandas as pd
-from supabase import create_client, Client
-
-# Configurações do Supabase (substitua com suas credenciais)
-SUPABASE_URL = "https://SEU-PROJETO.supabase.co"
-SUPABASE_KEY = "SUA-CHAVE-SECRETA"
-supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Lista inicial de pães (editável)
 paes = [
@@ -75,30 +69,3 @@ for vendedor in st.session_state.vendedores:
 df = pd.DataFrame(st.session_state.vendas).fillna(0)
 st.subheader("Resumo Geral")
 st.dataframe(df.style.format("{:,.0f}"))
-
-# Botões para interação com Supabase
-col1, col2 = st.columns(2)
-
-with col1:
-    if st.button("Salvar no Supabase"):
-        supabase.table("vendas").delete().execute()  # Limpa antes de salvar novo
-        for vendedor in st.session_state.vendas:
-            for pao in st.session_state.vendas[vendedor]:
-                supabase.table("vendas").insert({
-                    "vendedor": vendedor,
-                    "pao": pao,
-                    "quantidade": st.session_state.vendas[vendedor][pao]
-                }).execute()
-        st.success("Vendas salvas com sucesso no Supabase!")
-
-with col2:
-    if st.button("Carregar do Supabase"):
-        response = supabase.table("vendas").select("*").execute()
-        if response.data:
-            for row in response.data:
-                vendedor = row['vendedor']
-                pao = row['pao']
-                quantidade = row['quantidade']
-                if vendedor in st.session_state.vendas and pao in st.session_state.vendas[vendedor]:
-                    st.session_state.vendas[vendedor][pao] = quantidade
-        st.success("Dados carregados do Supabase!")
