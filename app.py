@@ -1,5 +1,12 @@
 import streamlit as st
 import pandas as pd
+from supabase import create_client, Client
+
+# Coloque aqui suas credenciais do Supabase
+SUPABASE_URL = "https://cufybnrfjzyktyumjxki.supabase.co"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN1ZnlibnJmanp5a3R5dW1qeGtpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5MjE2MTAsImV4cCI6MjA2NzQ5NzYxMH0.-NzU1fZbhzIgCYfZvIFiIa9LpQdTRjkJ5nPwR4nw7j8"
+
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Lista inicial de pães (editável)
 paes = [
